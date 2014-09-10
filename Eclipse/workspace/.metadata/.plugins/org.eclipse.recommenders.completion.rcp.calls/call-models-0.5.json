@@ -1,0 +1,17 @@
+{
+  "/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/core.jar": {
+    "location": "/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/core.jar",
+    "status": "UNRESOLVED",
+    "error": "No call model found for \u0027/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/core.jar\u0027. Neither fingerprint \u0027df9ec02299726b88d1a58e2aced8b36f90d20933\u0027 nor symbolic name \u0027core\u0027 are known."
+  },
+  "/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar": {
+    "coordinate": "jre:jre:zip:call:1.0.0",
+    "location": "/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar",
+    "status": "RESOLVED"
+  },
+  "/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/src": {
+    "location": "/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/src",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027/Users/akazanjian/Dropbox/Eclipse/workspace/SideScroller/src\u0027. Skipped."
+  }
+}

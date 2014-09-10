@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Interactive Sketch</title>
+		<style type="text/css">
+			p {
+				color: white;
+				text-align: center; }
+			legend {
+				color: white;
+				text-align: left; }
+			.fieldset-auto-width {
+         		display: inline-block;
+				text-align: center; }
+		</style>
+	    <script type="text/javascript" src="processing.js"></script>
+		<script type="text/javascript" src="jscolor/jscolor.js"></script>
+		<script type="text/javascript">
+	        function setScale(id) {
+	        	var pjs = Processing.getInstanceById(id);
+	            var d = document.getElementById('setScale').value;
+	            pjs.setScale(d);
+			}
+	        function setColor(id) {
+	        	var pjs = Processing.getInstanceById(id);
+	            var c = document.getElementById('setColor').value;
+	            console.log(c);
+	            pjs.setColor(c);
+			}
+        </script>
+	</head>
+	<body style="background-color: #252525">
+		<div style="text-align: center;">
+			<p><canvas id="ellipse" data-processing-sources="ellipse.pde"></canvas></p>
+			<fieldset class="fieldset-auto-width">
+				<legend>ellipse parameters</legend>
+				<p>setScale:
+					<input
+					type="range"  
+					id="setScale"   
+					onchange="setScale('ellipse')"
+					value="20" 
+					size="4" 
+					min="3" max="100"
+					style="width: 100px"
+					</input>
+				</p>
+				<p>setColor:
+					<input 
+					class="color" 
+					id="setColor" 
+					value = "000000"
+					size="7"
+					onchange="setColor('ellipse')">
+					</input>
+				</p>
+			</fieldset>
+		</div>
+	</body>
+</html>

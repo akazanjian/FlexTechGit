@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Raccoon</title>
+		<style type="text/css">
+			p {
+				color: white;
+				text-align: center; }
+			legend {
+				color: white;
+				text-align: left; }
+			.fieldset-auto-width {
+         		display: inline-block;
+				text-align: center; }
+		</style>
+	    <script type="text/javascript" src="processing.js"></script>
+		<script type="text/javascript">
+	        function setScale(id) {
+	        	var pjs = Processing.getInstanceById(id);
+	            var s = document.getElementById('setScale').value;
+	            pjs.setScale(s);
+			}
+	        function setNumberOfFoods(id) {
+	        	var pjs = Processing.getInstanceById(id);
+	            var n = document.getElementById('setNumberOfFoods').value;
+	            pjs.setNumberOfFoods(n);
+			}
+        </script>
+	</head>
+	<body style="background-color: #252525">
+		<div style="text-align: center;">
+			<p><canvas id="ellipse" data-processing-sources="raccoonObject.pde"></canvas></p>
+			<fieldset class="fieldset-auto-width">
+				<legend>Scale</legend>
+				<p>Set Scale:
+					<input
+					type="range"  
+					id="setScale"   
+					onchange="setScale('raccoonObject')"
+					value="1" 
+					size="4" 
+					min="3" max="100"
+					style="width: 100px"
+					</input>
+				</p>
+				<p>Set Number of Foods:
+					<input
+					type="range"  
+					id="setScale"   
+					onchange="setNumberOfFoods('raccoonObject')"
+					value="1" 
+					size="4" 
+					min="1" max="20"
+					style="width: 100px"
+					</input>
+				</p>
+			</fieldset>
+		</div>
+	</body>
+</html>
