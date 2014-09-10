@@ -1,4 +1,5 @@
 float rotationAngle = 1.1;
+float frameNumber;
 
 void setup() {
   size(300, 300);
@@ -6,14 +7,18 @@ void setup() {
 }
 
 void draw() {
-  if (frameCount <= 500) {
+  if (frameNumber >= 1001) {
+    frameNumber = 0;
+  }
+  frameNumber = frameNumber + 1;
+  if (frameNumber <= 500) {
     rotationAngle = rotationAngle * 1.01;
   }
-  if (frameCount >= 501 && frameCount <= 1000) {
+  if (frameNumber >= 501 && frameNumber <= 1001) {
     rotationAngle = rotationAngle / 1.01;
   }
   background(0);
-  fill(.1 * millis());
+  fill(255);
   translate(width/2, height/2);
   rectMode(CENTER);
   rotate(rotationAngle/1);
