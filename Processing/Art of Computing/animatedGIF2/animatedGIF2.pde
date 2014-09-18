@@ -1,7 +1,7 @@
 ArrayList<Ball> balls;
 ArrayList<Platform> platforms;
 float minFrames = 1;
-float framesPerSecond = 30;
+float framesPerSecond = 10;
 float framesUpOrDown = 1;
 int numberFramesPerBall = 15;
 int numberFramesToSkipBeforeRecording = 100;

@@ -18,8 +18,8 @@ class Ball {
 }
 
   void draw() {
-    if (y > 225) {
-      vy = -vy * coefficientOfRestitution;
+    if (y > 219) {
+      vy = -abs(vy) * coefficientOfRestitution;
       vx = vx + IncreaseOfVxOnImpact;
     }
     fill(0, 255, 0);
