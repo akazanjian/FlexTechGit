@@ -3,7 +3,7 @@ class Ball {
   float strokeWidth = 3;
   float coefficientOfRestitution;
   float IncreaseOfVxOnImpact;
-  float x, y;
+  int x, y;
   float vx, vy;
   float ay;
 
@@ -15,7 +15,7 @@ class Ball {
     ay = .5;
     coefficientOfRestitution = .8;
     IncreaseOfVxOnImpact = 5;
-}
+  }
 
   void draw() {
     if (y > 219) {
