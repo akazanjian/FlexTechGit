@@ -2,13 +2,13 @@ class Atom {
   int protons;
   float amu;
   String name;
-  String abbrev;
+  String symbol;
   
-  Atom(int p, float mass, String name_, String abbrev_) {
+  Atom(int p, float mass, String name_, String symbol_) {
     protons = p;
     amu = mass;
     name = name_;
-    abbrev = abbrev_;
+    symbol = symbol_;
   }
  
  

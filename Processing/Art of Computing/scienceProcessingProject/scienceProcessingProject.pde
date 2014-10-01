@@ -2,7 +2,7 @@ Atom atom;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
-//ArrayList<Neutron> neutrons;
+ArrayList<Neutron> neutrons;
 //float minFrames = 1;
 //float framesPerSecond = 60;
 //float framesUpOrDown = 1;
@@ -16,7 +16,7 @@ void setup() {
   createAtoms();
   protons = new ArrayList<Proton>();
   electrons = new ArrayList<Electron>();
-  //  neutrons = new ArrayList<Neutron>();
+  neutrons = new ArrayList<Neutron>();
 }
 
 void keyPressed() {
@@ -40,10 +40,19 @@ void keyPressed() {
         protons.remove(protons.size() - 1);
       }
     }
+    if (keyCode == SHIFT) {
+      neutrons.add(new Neutron(neutrons.size() + 1, neutrons.size() + 1, neutrons.size()));
+    }
+    if (neutrons.size() > 0) {
+      if (keyCode == CONTROL) {
+        neutrons.remove(neutrons.size() - 1);
+      }
+    }
   }
 }
 
 void draw() {
+  float atomicMass = protons.size() + neutrons.size();
   float chargeUp = protons.size() - electrons.size();
   float chargeDown = electrons.size() - protons.size();
   //  frameRate(framesPerSecond);
@@ -51,6 +60,7 @@ void draw() {
   if (frameCount == 1) {
     protons.add(new Proton(0, 0, 0));
     electrons.add(new Electron(0));
+    neutrons.add(new Neutron(10, 10, 0));
   }
   for (Proton aProton: protons) {
     aProton.draw();
@@ -58,24 +68,29 @@ void draw() {
   for (Electron anElectron: electrons) {
     anElectron.draw();
   }
+  for (Neutron aNeutron: neutrons) {
+    aNeutron.draw();
+  }
   fill(255);
   //  text("fps =" + framesPerSecond, w - 80, h * .03);
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
-  text("Atomic Mass: " + protons.size(), w - 200, h * .13);
+  text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
+  text("Atomic Mass: " + atomicMass, w - 200, h * .17);
   if (protons.size() > electrons.size()) {
-    text("Charge: + " + chargeUp, w - 200, h * .09);
+    text("Charge: + " + chargeUp, w - 200, h * .11);
   }
   if (protons.size() == electrons.size()) {
-    text("Charge: Neutral", w - 200, h * .09);
+    text("Charge: Neutral", w - 200, h * .11);
   }
   if (protons.size() < electrons.size()) {
-    text("Charge: - " + chargeDown, w - 200, h * .09);
+    text("Charge: - " + chargeDown, w - 200, h * .11);
   }
 
   int atomicNumber = protons.size();
   Atom atom = atoms.get(atomicNumber);
-  text("Element: " + atom.name, w - 200, h * .11);
+  text("Element: " + atom.name, w - 200, h * .13);
+  text("Symbol: " + atom.symbol, w- 200, h * .15);
 }
 
 void createAtoms() {
