@@ -23,4 +23,3 @@ class Electron {
     popMatrix();
   }
 }
-

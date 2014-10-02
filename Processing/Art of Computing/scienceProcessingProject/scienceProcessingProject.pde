@@ -10,6 +10,9 @@ ArrayList<Neutron> neutrons;
 //float numberOfElectrons = 0;
 int w = 750;
 int h = 750;
+float nuclearRadius = 30;
+
+
 
 void setup() {
   size(w, h);
@@ -20,6 +23,9 @@ void setup() {
 }
 
 void keyPressed() {
+  float angle = random(0, 2 * PI);
+  float x = nuclearRadius * cos(angle);
+  float y = nuclearRadius * sin(angle);
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size()));
@@ -32,7 +38,7 @@ void keyPressed() {
     }
     if (protons.size() < 109) {
       if (keyCode == UP) {
-        protons.add(new Proton(protons.size() + 1, protons.size() + 1, protons.size()));
+        protons.add(new Proton(x, y, protons.size()));
       }
     }
     if (protons.size() > 0) {
@@ -41,7 +47,7 @@ void keyPressed() {
       }
     }
     if (keyCode == SHIFT) {
-      neutrons.add(new Neutron(neutrons.size() + 1, neutrons.size() + 1, neutrons.size()));
+      neutrons.add(new Neutron(x, y, neutrons.size()));
     }
     if (neutrons.size() > 0) {
       if (keyCode == CONTROL) {

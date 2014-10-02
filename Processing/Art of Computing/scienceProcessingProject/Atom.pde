@@ -10,6 +10,8 @@ class Atom {
     name = name_;
     symbol = symbol_;
   }
+  
+  
  
  
  
