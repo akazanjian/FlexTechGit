@@ -10,8 +10,7 @@ ArrayList<Neutron> neutrons;
 //float numberOfElectrons = 0;
 int w = 750;
 int h = 750;
-float neutronNuclearRadius = 20;
-float protonNuclearRadius = 30;
+float nuclearRadius = 30;
 
 
 
@@ -25,10 +24,8 @@ void setup() {
 
 void keyPressed() {
   float angle = random(0, 2 * PI);
-  float neutronX = neutronNuclearRadius * cos(angle);
-  float neutronY = neutronNuclearRadius * sin(angle);
-  float protonX = protonNuclearRadius * cos(angle);
-  float protonY = protonNuclearRadius * sin(angle);
+  float x = nuclearRadius * cos(angle);
+  float y = nuclearRadius * sin(angle);
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size()));
@@ -39,22 +36,22 @@ void keyPressed() {
         electrons.remove(electrons.size() - 1);
       }
     }
-    if (keyCode == SHIFT) {
-      neutrons.add(new Neutron(neutronX, neutronY, neutrons.size()));
-    }
-    if (neutrons.size() > 0) {
-      if (keyCode == CONTROL) {
-        neutrons.remove(neutrons.size() - 1);
-      }
-    }
     if (protons.size() < 109) {
       if (keyCode == UP) {
-        protons.add(new Proton(protonX, protonY, protons.size()));
+        protons.add(new Proton(x, y, protons.size()));
       }
     }
     if (protons.size() > 0) {
       if (keyCode == DOWN) {
         protons.remove(protons.size() - 1);
+      }
+    }
+    if (keyCode == SHIFT) {
+      neutrons.add(new Neutron(x, y, neutrons.size()));
+    }
+    if (neutrons.size() > 0) {
+      if (keyCode == CONTROL) {
+        neutrons.remove(neutrons.size() - 1);
       }
     }
   }
@@ -65,7 +62,7 @@ void draw() {
   float chargeUp = protons.size() - electrons.size();
   float chargeDown = electrons.size() - protons.size();
   //  frameRate(framesPerSecond);
-  background(255);
+  background(150);
   if (frameCount == 1) {
     protons.add(new Proton(0, 0, 0));
     electrons.add(new Electron(0));
@@ -80,7 +77,7 @@ void draw() {
   for (Neutron aNeutron: neutrons) {
     aNeutron.draw();
   }
-  fill(0);
+  fill(255);
   //  text("fps =" + framesPerSecond, w - 80, h * .03);
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
@@ -215,3 +212,91 @@ void createAtoms() {
   atoms.add(new Atom(108, 277, "Hassium", "Hs"));
   atoms.add(new Atom(109, 268, "Meitnerium", "Mt"));
 }
+class Atom {
+  int protons;
+  float amu;
+  String name;
+  String symbol;
+  
+  Atom(int p, float mass, String name_, String symbol_) {
+    protons = p;
+    amu = mass;
+    name = name_;
+    symbol = symbol_;
+  }
+  
+  
+ 
+ 
+ 
+  
+}
+   
+class Electron {
+  float x;
+  float y;
+  float diameter;
+  float rotationSpeed, r;
+  int electronNumber;
+
+  Electron(int electronNumber_) {
+    electronNumber = electronNumber_;
+    diameter = 20;
+    r = 75;
+    rotationSpeed = .05;
+  }
+
+  void draw() {
+    pushMatrix();
+    translate(width/2, height/2);
+    stroke(5);
+    fill(255, 255, 0);
+    float phaseAngle = electronNumber * 2 * PI/electrons.size();
+    float angle =  rotationSpeed * frameCount + phaseAngle;   
+    ellipse(r * cos(angle), r * sin(angle), diameter, diameter);
+    popMatrix();
+  }
+}
+class Neutron {
+  float diameter;
+  float x, y;
+  int neutronNumber;
+
+  Neutron(float x_, float y_, int neutronNumber_) {
+    x = x_;
+    y = y_;
+    neutronNumber = neutronNumber_;
+    diameter = 50;
+  }
+
+  void draw() {
+    pushMatrix();
+    stroke(5);
+    fill(160, 160, 160);
+    translate(width/2, height/2);
+    ellipse(x, y, diameter, diameter);
+    popMatrix();
+  }
+}
+class Proton {
+  float diameter;
+  float x, y;
+  int protonNumber;
+
+  Proton(float x_, float y_, int protonNumber_) {
+    x = x_;
+    y = y_;
+    protonNumber = protonNumber_;
+    diameter = 50;
+  }
+
+  void draw() {
+    pushMatrix();
+    stroke(5);
+    fill(204, 153, 255);
+    translate(width/2, height/2);
+    ellipse(x, y, diameter, diameter);
+    popMatrix();
+  }
+}
+

@@ -13,7 +13,7 @@ class Neutron {
   void draw() {
     pushMatrix();
     stroke(5);
-    fill(160, 160, 160);
+    fill(160, 160, 160, 100);
     translate(width/2, height/2);
     ellipse(x, y, diameter, diameter);
     popMatrix();

@@ -8,7 +8,7 @@ class Electron {
   Electron(int electronNumber_) {
     electronNumber = electronNumber_;
     diameter = 20;
-    r = 75;
+    r = 100;
     rotationSpeed = .05;
   }
 
@@ -16,7 +16,7 @@ class Electron {
     pushMatrix();
     translate(width/2, height/2);
     stroke(5);
-    fill(255, 255, 0);
+    fill(255, 255, 0, 100);
     float phaseAngle = electronNumber * 2 * PI/electrons.size();
     float angle =  rotationSpeed * frameCount + phaseAngle;   
     ellipse(r * cos(angle), r * sin(angle), diameter, diameter);
