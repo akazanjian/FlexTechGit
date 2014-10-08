@@ -12,11 +12,13 @@ int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
+float radius = 100;
+float electronCount;
 
 
 
 void setup() {
-  size(w, h);
+  size(750, 750);
   createAtoms();
   protons = new ArrayList<Proton>();
   electrons = new ArrayList<Electron>();
@@ -29,10 +31,15 @@ void keyPressed() {
   float neutronY = neutronNuclearRadius * sin(angle);
   float protonX = protonNuclearRadius * cos(angle);
   float protonY = protonNuclearRadius * sin(angle);
+  if (electronCount >= 2) {
+    radius = 200;
+  }
   if (key == CODED) {
     if (keyCode == RIGHT) {
-      electrons.add(new Electron(electrons.size()));
+      electrons.add(new Electron(electrons.size(), radius));
+      electronCount += 1;
     }
+
 
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
@@ -68,8 +75,9 @@ void draw() {
   background(255);
   if (frameCount == 1) {
     protons.add(new Proton(0, 0, 0));
-    electrons.add(new Electron(0));
+    electrons.add(new Electron(0, radius));
     neutrons.add(new Neutron(10, 10, 0));
+    electronCount = 1;
   }
   for (Proton aProton: protons) {
     aProton.draw();

@@ -5,10 +5,10 @@ class Electron {
   float rotationSpeed, r;
   int electronNumber;
 
-  Electron(int electronNumber_) {
+  Electron(int electronNumber_, float r_) {
     electronNumber = electronNumber_;
     diameter = 20;
-    r = 100;
+    r = r_;
     rotationSpeed = .05;
   }
 
