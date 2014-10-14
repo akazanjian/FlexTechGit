@@ -1,4 +1,5 @@
 Atom atom;
+Shell shell;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
@@ -12,9 +13,9 @@ int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
-float radius = 100;
-float electronCount;
-
+int electronCount;
+int[] shellCapacities = new int[] {2, 8, 8};
+int[] shellDiameters = new int[] {100, 200, 350};
 
 
 void setup() {
@@ -25,25 +26,28 @@ void setup() {
   neutrons = new ArrayList<Neutron>();
 }
 
+
 void keyPressed() {
   float angle = random(0, 2 * PI);
   float neutronX = neutronNuclearRadius * cos(angle);
   float neutronY = neutronNuclearRadius * sin(angle);
   float protonX = protonNuclearRadius * cos(angle);
   float protonY = protonNuclearRadius * sin(angle);
-  if (electronCount >= 2) {
-    radius = 200;
+  if (electronCount > 2) {
+     = 2;
+  }
+  if (electronCount <= 2) {
+     = 1;
   }
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size(), radius));
       electronCount += 1;
     }
-
-
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
         electrons.remove(electrons.size() - 1);
+        electronCount -= 1;
       }
     }
     if (keyCode == SHIFT) {
@@ -65,6 +69,21 @@ void keyPressed() {
       }
     }
   }
+}
+
+int shellLevel(int electronNumber) {
+  if (electronCount 
+  return 1;
+}
+
+int shellDiameter(int electronNumber) {
+  return shellDiameters[shellLevel(electronNumber)];
+}
+
+int numberOfElectronsInShell(int shellLevel_) {
+  //Not the capacity of the shell. Rather, how many
+  //electrons are currently in the shell?
+  return 2;
 }
 
 void draw() {
