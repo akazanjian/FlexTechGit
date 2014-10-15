@@ -1,21 +1,20 @@
 Atom atom;
-Shell shell;
+//Shell shell;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
 ArrayList<Neutron> neutrons;
-//float minFrames = 1;
-//float framesPerSecond = 60;
-//float framesUpOrDown = 1;
-//float numberOfProtons = 0;
-//float numberOfElectrons = 0;
 int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
-int electronCount;
-int[] shellCapacities = new int[] {2, 8, 8};
-int[] shellDiameters = new int[] {100, 200, 350};
+//int electronCount;
+int[] shellCapacities = new int[] {
+  0, 2, 8, 18, 32, 50, 72
+};
+int[] shellDiameters = new int[] {
+  100, 200, 350, 450, 600, 800
+};
 
 
 void setup() {
@@ -33,21 +32,21 @@ void keyPressed() {
   float neutronY = neutronNuclearRadius * sin(angle);
   float protonX = protonNuclearRadius * cos(angle);
   float protonY = protonNuclearRadius * sin(angle);
-  if (electronCount > 2) {
-     = 2;
-  }
-  if (electronCount <= 2) {
-     = 1;
-  }
+  //  if (electronCount > 2) {
+  //     = 2;
+  //  }
+  //  if (electronCount <= 2) {
+  //     = 1;
+  //  }
   if (key == CODED) {
     if (keyCode == RIGHT) {
-      electrons.add(new Electron(electrons.size(), radius));
-      electronCount += 1;
+      electrons.add(new Electron(electrons.size()));
+      //      electronCount += 1;
     }
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
         electrons.remove(electrons.size() - 1);
-        electronCount -= 1;
+        //        electronCount -= 1;
       }
     }
     if (keyCode == SHIFT) {
@@ -71,9 +70,27 @@ void keyPressed() {
   }
 }
 
+int electronCount() {
+  return electrons.size();
+}
+
 int shellLevel(int electronNumber) {
-  if (electronCount 
-  return 1;
+  if (electronCount() <= 2) {
+    return 1;
+  }
+  if (electronCount() <= 10) {
+    return 2;
+  }
+  if (electronCount() <= 28) {
+    return 3;
+  }
+  if (electronCount() <= 60) {
+    return 4;
+  }
+  if (electronCount() <= 110) {
+    return 5;
+  }
+  return 6;
 }
 
 int shellDiameter(int electronNumber) {
@@ -83,20 +100,19 @@ int shellDiameter(int electronNumber) {
 int numberOfElectronsInShell(int shellLevel_) {
   //Not the capacity of the shell. Rather, how many
   //electrons are currently in the shell?
-  return 2;
+  return electronCount();
 }
 
 void draw() {
   float atomicMass = protons.size() + neutrons.size();
   float chargeUp = protons.size() - electrons.size();
   float chargeDown = electrons.size() - protons.size();
-  //  frameRate(framesPerSecond);
   background(255);
   if (frameCount == 1) {
     protons.add(new Proton(0, 0, 0));
-    electrons.add(new Electron(0, radius));
+    electrons.add(new Electron(0));
     neutrons.add(new Neutron(10, 10, 0));
-    electronCount = 1;
+    //    electronCount = 1;
   }
   for (Proton aProton: protons) {
     aProton.draw();

@@ -1,13 +1,12 @@
 class Electron {
   float x;
   float y;
-  float rotationSpeed, r;
+  float rotationSpeed;
   float diameter;
   int electronNumber;
 
-  Electron(int electronNumber_, float r_) {
+  Electron(int electronNumber_) {
     electronNumber = electronNumber_;
-    r = r_;
     rotationSpeed = .05;
     diameter = 20;
   }
@@ -17,9 +16,10 @@ class Electron {
     translate(width/2, height/2);
     stroke(204, 204, 0, 150);
     fill(255, 255, 0, 100);
-    float phaseAngle = electronNumber * 2 * PI/shell.size();
+    float phaseAngle = electronNumber * 2 * PI/numberOfElectronsInShell();
     float angle =  rotationSpeed * frameCount + phaseAngle;   
-    ellipse(r * cos(angle), r * sin(angle), diameter, diameter);
+    float radius = shellDiameter(electronNumber)/2;
+    ellipse(radius * cos(angle), radius * sin(angle), diameter, diameter);
     popMatrix();
   }
 }
