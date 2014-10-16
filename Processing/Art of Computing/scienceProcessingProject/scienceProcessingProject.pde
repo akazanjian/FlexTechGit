@@ -8,7 +8,6 @@ int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
-//int electronCount;
 int[] shellCapacities = new int[] {
   0, 2, 8, 18, 32, 50, 72
 };
@@ -41,12 +40,10 @@ void keyPressed() {
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size()));
-      //      electronCount += 1;
     }
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
         electrons.remove(electrons.size() - 1);
-        //        electronCount -= 1;
       }
     }
     if (keyCode == SHIFT) {
@@ -124,7 +121,6 @@ void draw() {
     aNeutron.draw();
   }
   fill(0);
-  //  text("fps =" + framesPerSecond, w - 80, h * .03);
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
   text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
