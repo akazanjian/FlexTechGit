@@ -1,0 +1,11 @@
+*.png
+*.pdf
+*.jpg
+processing.js
+web-export
+libraries
+tools
+modes
+sketch.properties
+.DS_Store
+
