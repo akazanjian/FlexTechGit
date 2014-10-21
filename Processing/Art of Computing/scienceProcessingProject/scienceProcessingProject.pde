@@ -8,11 +8,14 @@ int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
+int[] totalElectronsInFilledShells = new int[] {
+  0, 2, 10, 28, 60, 110, 182
+};
 int[] shellCapacities = new int[] {
-  0, 2, 8, 18, 32, 50, 72
+  -1, 2, 8, 18, 32, 50, 72
 };
 int[] shellDiameters = new int[] {
-  100, 200, 350, 450, 600, 800
+  -1, 200, 300, 400, 500, 600, 700
 };
 
 
@@ -31,15 +34,9 @@ void keyPressed() {
   float neutronY = neutronNuclearRadius * sin(angle);
   float protonX = protonNuclearRadius * cos(angle);
   float protonY = protonNuclearRadius * sin(angle);
-  //  if (electronCount > 2) {
-  //     = 2;
-  //  }
-  //  if (electronCount <= 2) {
-  //     = 1;
-  //  }
   if (key == CODED) {
     if (keyCode == RIGHT) {
-      electrons.add(new Electron(electrons.size()));
+      electrons.add(new Electron(electrons.size()+1));
     }
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
@@ -72,19 +69,19 @@ int electronCount() {
 }
 
 int shellLevel(int electronNumber) {
-  if (electronCount() <= 2) {
+  if (electronNumber <= 2) {
     return 1;
   }
-  if (electronCount() <= 10) {
+  if (electronNumber <= 10) {
     return 2;
   }
-  if (electronCount() <= 28) {
+  if (electronNumber <= 28) {
     return 3;
   }
-  if (electronCount() <= 60) {
+  if (electronNumber <= 60) {
     return 4;
   }
-  if (electronCount() <= 110) {
+  if (electronNumber <= 110) {
     return 5;
   }
   return 6;
@@ -95,9 +92,17 @@ int shellDiameter(int electronNumber) {
 }
 
 int numberOfElectronsInShell(int shellLevel_) {
-  //Not the capacity of the shell. Rather, how many
+  //Not necessarily the capacity of the shell. Rather, how many
   //electrons are currently in the shell?
-  return electronCount();
+  int highestShell = shellLevel(electronCount());
+  if (shellLevel_ < highestShell) {
+    return shellCapacities[shellLevel_];
+  }
+  if (shellLevel_ > highestShell) {
+    return 0;
+  }  
+  
+  return electronCount() - totalElectronsInFilledShells[shellLevel_ - 1];
 }
 
 void draw() {
@@ -107,7 +112,7 @@ void draw() {
   background(255);
   if (frameCount == 1) {
     protons.add(new Proton(0, 0, 0));
-    electrons.add(new Electron(0));
+    electrons.add(new Electron(1));
     neutrons.add(new Neutron(10, 10, 0));
     //    electronCount = 1;
   }
