@@ -1,5 +1,5 @@
 Atom atom;
-//Shell shell;
+ArrayList<electronShell> shells;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
@@ -22,6 +22,7 @@ int[] shellDiameters = new int[] {
 void setup() {
   size(750, 750);
   createAtoms();
+  shell = new ArrayList<electronShell>();
   protons = new ArrayList<Proton>();
   electrons = new ArrayList<Electron>();
   neutrons = new ArrayList<Neutron>();
@@ -101,7 +102,7 @@ int numberOfElectronsInShell(int shellLevel_) {
   if (shellLevel_ > highestShell) {
     return 0;
   }  
-  
+
   return electronCount() - totalElectronsInFilledShells[shellLevel_ - 1];
 }
 
@@ -111,6 +112,7 @@ void draw() {
   float chargeDown = electrons.size() - protons.size();
   background(255);
   if (frameCount == 1) {
+    shell.add(new electronShell());
     protons.add(new Proton(0, 0, 0));
     electrons.add(new Electron(1));
     neutrons.add(new Neutron(10, 10, 0));
@@ -126,6 +128,7 @@ void draw() {
     aNeutron.draw();
   }
   fill(0);
+//  text("SHIFT increases
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
   text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
