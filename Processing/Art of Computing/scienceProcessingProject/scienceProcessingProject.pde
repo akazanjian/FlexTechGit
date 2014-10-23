@@ -1,5 +1,5 @@
 Atom atom;
-ArrayList<electronShell> shells;
+ArrayList<ElectronShell> shells;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
@@ -22,7 +22,7 @@ int[] shellDiameters = new int[] {
 void setup() {
   size(750, 750);
   createAtoms();
-  shell = new ArrayList<electronShell>();
+  shells = new ArrayList<ElectronShell>();
   protons = new ArrayList<Proton>();
   electrons = new ArrayList<Electron>();
   neutrons = new ArrayList<Neutron>();
@@ -111,8 +111,10 @@ void draw() {
   float chargeUp = protons.size() - electrons.size();
   float chargeDown = electrons.size() - protons.size();
   background(255);
+  float numberOfElectronShells = shellLevel(electronCount());
+  float diameter = (numberOfElectronShells + 1) * 100;
   if (frameCount == 1) {
-    shell.add(new electronShell());
+    shells.add(new ElectronShell(diameter));
     protons.add(new Proton(0, 0, 0));
     electrons.add(new Electron(1));
     neutrons.add(new Neutron(10, 10, 0));
