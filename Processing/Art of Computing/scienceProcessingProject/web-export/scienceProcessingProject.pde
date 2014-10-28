@@ -1,28 +1,135 @@
 Atom atom;
+ArrayList<ElectronShell> shells;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;
 ArrayList<Atom> atoms;
 ArrayList<Neutron> neutrons;
-//float minFrames = 1;
-//float framesPerSecond = 60;
-//float framesUpOrDown = 1;
-//float numberOfProtons = 0;
-//float numberOfElectrons = 0;
 int w = 750;
 int h = 750;
 float neutronNuclearRadius = 20;
 float protonNuclearRadius = 30;
-float radius = 100;
-float electronCount;
-
+int[] totalElectronsInFilledShells = new int[] {
+  0, 2, 10, 28, 60, 110, 182
+};
+int[] shellCapacities = new int[] {
+  -1, 2, 8, 18, 32, 50, 72
+};
+int[] shellDiameters = new int[] {
+  -1, 200, 300, 400, 500, 600, 700
+};
 
 
 void setup() {
   size(750, 750);
   createAtoms();
+  shells = new ArrayList<ElectronShell>();
   protons = new ArrayList<Proton>();
   electrons = new ArrayList<Electron>();
   neutrons = new ArrayList<Neutron>();
+}
+
+int electronCount() {
+  return electrons.size();
+}
+
+int shellLevel(int electronNumber) {
+  if (electronNumber <= 2) {
+    return 1;
+  }
+  if (electronNumber <= 10) {
+    return 2;
+  }
+  if (electronNumber <= 28) {
+    return 3;
+  }
+  if (electronNumber <= 60) {
+    return 4;
+  }
+  if (electronNumber <= 110) {
+    return 5;
+  }
+  return 6;
+}
+
+int shellDiameter(int electronNumber) {
+  return shellDiameters[shellLevel(electronNumber)];
+}
+
+int numberOfElectronsInShell(int shellLevel_) {
+  //Not necessarily the capacity of the shell. Rather, how many
+  //electrons are currently in the shell?
+  int highestShell = shellLevel(electronCount());
+  if (shellLevel_ < highestShell) {
+    return shellCapacities[shellLevel_];
+  }
+  if (shellLevel_ > highestShell) {
+    return 0;
+  }  
+
+  return electronCount() - totalElectronsInFilledShells[shellLevel_ - 1];
+}
+
+void draw() {
+  float atomicMass = protons.size() + neutrons.size();
+  float chargeUp = protons.size() - electrons.size();
+  float chargeDown = electrons.size() - protons.size();
+  background(255);
+  int numberOfElectronShells = shellLevel(electronCount());
+  float diameter = (shells.size() + 2) * 100;
+  if (frameCount == 1) {
+    shells.add(new ElectronShell(diameter));
+    protons.add(new Proton(0, 0, 0));
+    electrons.add(new Electron(1));
+    neutrons.add(new Neutron(10, 10, 0));
+    //    electronCount = 1;
+  }
+  if (electrons.size() == 0) {
+    numberOfElectronShells = 0;
+    ;
+  }
+  if (shells.size() < numberOfElectronShells) {
+    shells.add(new ElectronShell(diameter));
+  }
+  if (shells.size() > numberOfElectronShells && shells.size() > 0) {
+    shells.remove(shells.size() - 1);
+  }
+  for (ElectronShell aShell: shells) {
+    aShell.draw();
+  }
+  for (Proton aProton: protons) {
+    aProton.draw();
+  }
+  for (Electron anElectron: electrons) {
+    anElectron.draw();
+  }
+  for (Neutron aNeutron: neutrons) {
+    aNeutron.draw();
+  }
+  //  println("numberOfShells="+shells.size());
+  fill(0);
+  if (frameCount <= 120) {
+    textSize(50);
+    text("Press i for instructions", 100, height/2);
+  }
+  textSize(12);
+  text("Number Of Protons: " + protons.size(), w - 200, h * .05);
+  text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
+  text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
+  text("Atomic Mass: " + atomicMass, w - 200, h * .17);
+  if (protons.size() > electrons.size()) {
+    text("Charge: + " + chargeUp, w - 200, h * .11);
+  }
+  if (protons.size() == electrons.size()) {
+    text("Charge: Neutral", w - 200, h * .11);
+  }
+  if (protons.size() < electrons.size()) {
+    text("Charge: - " + chargeDown, w - 200, h * .11);
+  }
+
+  int atomicNumber = protons.size();
+  Atom atom = atoms.get(atomicNumber);
+  text("Element: " + atom.name, w - 200, h * .13);
+  text("Symbol: " + atom.symbol, w- 200, h * .15);
 }
 
 void keyPressed() {
@@ -31,16 +138,10 @@ void keyPressed() {
   float neutronY = neutronNuclearRadius * sin(angle);
   float protonX = protonNuclearRadius * cos(angle);
   float protonY = protonNuclearRadius * sin(angle);
-  if (electronCount >= 2) {
-    radius = 200;
-  }
   if (key == CODED) {
     if (keyCode == RIGHT) {
-      electrons.add(new Electron(electrons.size(), radius));
-      electronCount += 1;
+      electrons.add(new Electron(electrons.size()+1));
     }
-
-
     if (electrons.size() > 0) {
       if (keyCode == LEFT) {
         electrons.remove(electrons.size() - 1);
@@ -65,49 +166,20 @@ void keyPressed() {
       }
     }
   }
-}
-
-void draw() {
-  float atomicMass = protons.size() + neutrons.size();
-  float chargeUp = protons.size() - electrons.size();
-  float chargeDown = electrons.size() - protons.size();
-  //  frameRate(framesPerSecond);
-  background(255);
-  if (frameCount == 1) {
-    protons.add(new Proton(0, 0, 0));
-    electrons.add(new Electron(0, radius));
-    neutrons.add(new Neutron(10, 10, 0));
-    electronCount = 1;
+  if (keyPressed == true) {
+    if (key == 'i' || key == 'I') {
+      textSize(12);
+      text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
+      text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
+      text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
+      text("The C key clears everything.", 20, height * 0.11);
+    }
+    if (key == 'c' || key == 'C') {
+      electrons.remove(electrons.size() - electrons.size());
+      protons.remove(protons.size() - protons.size());
+      neutrons.remove(neutrons.size() - neutrons.size());
+    }
   }
-  for (Proton aProton: protons) {
-    aProton.draw();
-  }
-  for (Electron anElectron: electrons) {
-    anElectron.draw();
-  }
-  for (Neutron aNeutron: neutrons) {
-    aNeutron.draw();
-  }
-  fill(0);
-  //  text("fps =" + framesPerSecond, w - 80, h * .03);
-  text("Number Of Protons: " + protons.size(), w - 200, h * .05);
-  text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
-  text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
-  text("Atomic Mass: " + atomicMass, w - 200, h * .17);
-  if (protons.size() > electrons.size()) {
-    text("Charge: + " + chargeUp, w - 200, h * .11);
-  }
-  if (protons.size() == electrons.size()) {
-    text("Charge: Neutral", w - 200, h * .11);
-  }
-  if (protons.size() < electrons.size()) {
-    text("Charge: - " + chargeDown, w - 200, h * .11);
-  }
-
-  int atomicNumber = protons.size();
-  Atom atom = atoms.get(atomicNumber);
-  text("Element: " + atom.name, w - 200, h * .13);
-  text("Symbol: " + atom.symbol, w- 200, h * .15);
 }
 
 void createAtoms() {
@@ -246,25 +318,31 @@ class Atom {
 class Electron {
   float x;
   float y;
+  float rotationSpeed;
   float diameter;
-  float rotationSpeed, r;
   int electronNumber;
 
-  Electron(int electronNumber_, float r_) {
+  Electron(int electronNumber_) {
     electronNumber = electronNumber_;
     diameter = 20;
-    r = r_;
-    rotationSpeed = .05;
   }
 
   void draw() {
     pushMatrix();
     translate(width/2, height/2);
-    stroke(5);
-    fill(255, 255, 0, 100);
-    float phaseAngle = electronNumber * 2 * PI/electrons.size();
+    float red_ = 0;
+    float green_ = 204;
+    float blue_ = 204;
+    stroke(red_, green_, blue_, 150);
+    fill(red_, green_, blue_, 100);
+    int shellLevel_ = shellLevel(electronNumber);
+    int numberOfElectronsInShell_ = numberOfElectronsInShell(shellLevel_);
+//    println("electronNumber="+electronNumber+"  shellLevel_="+shellLevel_+ "   numberOfElectronsInShell_="+numberOfElectronsInShell_);
+    float phaseAngle = electronNumber * 2 * PI/numberOfElectronsInShell_;
+    float rotationSpeed = .05 + 0.005 * shellLevel_;
     float angle =  rotationSpeed * frameCount + phaseAngle;   
-    ellipse(r * cos(angle), r * sin(angle), diameter, diameter);
+    float radius = shellDiameter(electronNumber)/2;
+    ellipse(radius * cos(angle), radius * sin(angle), diameter, diameter);
     popMatrix();
   }
 }
@@ -282,7 +360,7 @@ class Neutron {
 
   void draw() {
     pushMatrix();
-    stroke(5);
+    stroke(96, 96, 96, 125);
     fill(160, 160, 160, 100);
     translate(width/2, height/2);
     ellipse(x, y, diameter, diameter);
@@ -303,11 +381,73 @@ class Proton {
 
   void draw() {
     pushMatrix();
-    stroke(5);
+    stroke(153, 51, 255, 125);
     fill(204, 153, 255, 150);
     translate(width/2, height/2);
     ellipse(x, y, diameter, diameter);
     popMatrix();
   }
 }
+class ElectronShell {
+  float x;
+  float y;
+  float diameter;
+
+  ElectronShell(float diameter_) {
+    diameter = diameter_;
+    x = width/2;
+    y = height/2;
+  }
+
+  void draw() {
+    fill(0, 0, 0, 0);
+    stroke(0, 0, 0, 150);
+    ellipse(x, y, diameter, diameter);
+  }
+}
+//    if (shellLevel(electronCount()) == 1) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 200, 200);
+//    }
+//    if (shellLevel(electronCount()) == 2) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 200, 200);
+//      ellipse(x, y, 300, 300);
+//    }
+//    if (shellLevel(electronCount()) == 3) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 200, 200);
+//      ellipse(x, y, 300, 300);
+//      ellipse(x, y, 400, 400);
+//    }
+//    if (shellLevel(electronCount()) == 4) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 300, 300);
+//      ellipse(x, y, 200, 200);
+//      ellipse(x, y, 400, 400);
+//      ellipse(x, y, 500, 500);
+//    }
+//    if (shellLevel(electronCount()) == 5) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 300, 300);
+//      ellipse(x, y, 200, 200);
+//      ellipse(x, y, 400, 400);
+//      ellipse(x, y, 500, 500);
+//      ellipse(x, y, 600, 600);
+//    }
+//    if (shellLevel(electronCount()) == 6) {
+//      stroke(0, 0, 0, 100);
+//      fill(255, 255, 255, 0);
+//      ellipse(x, y, 300, 300);
+//      ellipse(x, y, 200, 200);
+//      ellipse(x, y, 400, 400);
+//      ellipse(x, y, 500, 500);
+//      ellipse(x, y, 600, 600);
+//      ellipse(x, y, 700, 700);
+//    }
 

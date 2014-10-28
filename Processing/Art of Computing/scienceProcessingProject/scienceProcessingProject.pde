@@ -172,7 +172,7 @@ void keyPressed() {
       text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
       text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
       text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
-      text("The c key clears everything.", 20, height * 0.11);
+      text("The C key clears everything.", 20, height * 0.11);
     }
     if (key == 'c' || key == 'C') {
       electrons.remove(electrons.size() - electrons.size());
