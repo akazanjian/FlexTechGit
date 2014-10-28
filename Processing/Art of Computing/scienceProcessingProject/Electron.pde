@@ -20,7 +20,7 @@ class Electron {
     fill(red_, green_, blue_, 100);
     int shellLevel_ = shellLevel(electronNumber);
     int numberOfElectronsInShell_ = numberOfElectronsInShell(shellLevel_);
-    println("electronNumber="+electronNumber+"  shellLevel_="+shellLevel_+ "   numberOfElectronsInShell_="+numberOfElectronsInShell_);
+//    println("electronNumber="+electronNumber+"  shellLevel_="+shellLevel_+ "   numberOfElectronsInShell_="+numberOfElectronsInShell_);
     float phaseAngle = electronNumber * 2 * PI/numberOfElectronsInShell_;
     float rotationSpeed = .05 + 0.005 * shellLevel_;
     float angle =  rotationSpeed * frameCount + phaseAngle;   

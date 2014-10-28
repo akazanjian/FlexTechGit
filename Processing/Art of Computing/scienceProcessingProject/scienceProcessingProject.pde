@@ -111,14 +111,26 @@ void draw() {
   float chargeUp = protons.size() - electrons.size();
   float chargeDown = electrons.size() - protons.size();
   background(255);
-  float numberOfElectronShells = shellLevel(electronCount());
-  float diameter = (numberOfElectronShells + 1) * 100;
+  int numberOfElectronShells = shellLevel(electronCount());
+  float diameter = (shells.size() + 2) * 100;
   if (frameCount == 1) {
     shells.add(new ElectronShell(diameter));
     protons.add(new Proton(0, 0, 0));
     electrons.add(new Electron(1));
     neutrons.add(new Neutron(10, 10, 0));
     //    electronCount = 1;
+  }
+  if (electrons.size() == 0) {
+    numberOfElectronShells = 0;;
+  }
+  if (shells.size() < numberOfElectronShells) {
+    shells.add(new ElectronShell(diameter));
+  }
+  if (shells.size() > numberOfElectronShells && shells.size() > 0) {
+    shells.remove(shells.size() - 1);
+  }
+  for (ElectronShell aShell: shells) {
+    aShell.draw();
   }
   for (Proton aProton: protons) {
     aProton.draw();
@@ -129,8 +141,9 @@ void draw() {
   for (Neutron aNeutron: neutrons) {
     aNeutron.draw();
   }
+  //  println("numberOfShells="+shells.size());
   fill(0);
-//  text("SHIFT increases
+  //  text("SHIFT increases
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
   text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
