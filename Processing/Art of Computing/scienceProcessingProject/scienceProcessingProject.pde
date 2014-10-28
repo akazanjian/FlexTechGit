@@ -28,43 +28,6 @@ void setup() {
   neutrons = new ArrayList<Neutron>();
 }
 
-
-void keyPressed() {
-  float angle = random(0, 2 * PI);
-  float neutronX = neutronNuclearRadius * cos(angle);
-  float neutronY = neutronNuclearRadius * sin(angle);
-  float protonX = protonNuclearRadius * cos(angle);
-  float protonY = protonNuclearRadius * sin(angle);
-  if (key == CODED) {
-    if (keyCode == RIGHT) {
-      electrons.add(new Electron(electrons.size()+1));
-    }
-    if (electrons.size() > 0) {
-      if (keyCode == LEFT) {
-        electrons.remove(electrons.size() - 1);
-      }
-    }
-    if (keyCode == SHIFT) {
-      neutrons.add(new Neutron(neutronX, neutronY, neutrons.size()));
-    }
-    if (neutrons.size() > 0) {
-      if (keyCode == CONTROL) {
-        neutrons.remove(neutrons.size() - 1);
-      }
-    }
-    if (protons.size() < 109) {
-      if (keyCode == UP) {
-        protons.add(new Proton(protonX, protonY, protons.size()));
-      }
-    }
-    if (protons.size() > 0) {
-      if (keyCode == DOWN) {
-        protons.remove(protons.size() - 1);
-      }
-    }
-  }
-}
-
 int electronCount() {
   return electrons.size();
 }
@@ -121,7 +84,8 @@ void draw() {
     //    electronCount = 1;
   }
   if (electrons.size() == 0) {
-    numberOfElectronShells = 0;;
+    numberOfElectronShells = 0;
+    ;
   }
   if (shells.size() < numberOfElectronShells) {
     shells.add(new ElectronShell(diameter));
@@ -143,7 +107,11 @@ void draw() {
   }
   //  println("numberOfShells="+shells.size());
   fill(0);
-  //  text("SHIFT increases
+  if (frameCount <= 120) {
+    textSize(50);
+    text("Press i for instructions", 100, height/2);
+  }
+  textSize(12);
   text("Number Of Protons: " + protons.size(), w - 200, h * .05);
   text("Number Of Electrons: " + electrons.size(), w - 200, h * .07);
   text("Number Of Neutrons: " + neutrons.size(), w - 200, h * .09);
@@ -162,6 +130,56 @@ void draw() {
   Atom atom = atoms.get(atomicNumber);
   text("Element: " + atom.name, w - 200, h * .13);
   text("Symbol: " + atom.symbol, w- 200, h * .15);
+}
+
+void keyPressed() {
+  float angle = random(0, 2 * PI);
+  float neutronX = neutronNuclearRadius * cos(angle);
+  float neutronY = neutronNuclearRadius * sin(angle);
+  float protonX = protonNuclearRadius * cos(angle);
+  float protonY = protonNuclearRadius * sin(angle);
+  if (key == CODED) {
+    if (keyCode == RIGHT) {
+      electrons.add(new Electron(electrons.size()+1));
+    }
+    if (electrons.size() > 0) {
+      if (keyCode == LEFT) {
+        electrons.remove(electrons.size() - 1);
+      }
+    }
+    if (keyCode == SHIFT) {
+      neutrons.add(new Neutron(neutronX, neutronY, neutrons.size()));
+    }
+    if (neutrons.size() > 0) {
+      if (keyCode == CONTROL) {
+        neutrons.remove(neutrons.size() - 1);
+      }
+    }
+    if (protons.size() < 109) {
+      if (keyCode == UP) {
+        protons.add(new Proton(protonX, protonY, protons.size()));
+      }
+    }
+    if (protons.size() > 0) {
+      if (keyCode == DOWN) {
+        protons.remove(protons.size() - 1);
+      }
+    }
+  }
+  if (keyPressed == true) {
+    if (key == 'i' || key == 'I') {
+      textSize(12);
+      text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
+      text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
+      text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
+      text("The c key clears everything.", 20, height * 0.11);
+    }
+    if (key == 'c' || key == 'C') {
+      electrons.remove(electrons.size() - electrons.size());
+      protons.remove(protons.size() - protons.size());
+      neutrons.remove(neutrons.size() - neutrons.size());
+    }
+  }
 }
 
 void createAtoms() {
