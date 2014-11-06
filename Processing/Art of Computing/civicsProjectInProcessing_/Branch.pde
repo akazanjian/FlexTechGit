@@ -1,13 +1,16 @@
 class Branch {
   color branchColor;
   float r;
-  float size;
+  float size; //This is the default size of the circles.
   float angle;
-  float scale_;
+  float scale_; //This variable will change depending on what arrow key is pressed;
+  // all objects will shrink or grow based on whether you press up or down.
   float x, y;
-  int sizeModifier;
+  float sizeModifier; //This variable changes the size for the different levels of government;
+  // the state and local government spheres are always smaller than the federal government spheres, and
+  // this variable is what determines that.
 
-  Branch(color bColor, int sizeModifier_, float a) {
+  Branch(color bColor, float sizeModifier_, float a) {
     sizeModifier = sizeModifier_;
     angle = a;
     size = 200;
@@ -21,7 +24,7 @@ class Branch {
   void draw() {
     pushMatrix();
     translate(width/2, height/2);
-    float radius = r * scale_;
+    float radius = (r * scale_) * sizeModifier;
     if (keyPressed) {
       if (key == CODED) {
         if (keyCode == UP) {
@@ -36,7 +39,7 @@ class Branch {
     }
     fill(branchColor);
     stroke(0);
-    ellipse(radius * cos(angle), radius * sin(angle), size * scale_, size * scale_);
+    ellipse(radius * cos(angle), radius * sin(angle), (size * scale_) * sizeModifier, (size * scale_) * sizeModifier);
     println("scale=" + scale_);
     popMatrix();
   }
