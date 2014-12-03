@@ -174,10 +174,12 @@ void keyPressed() {
       text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
       text("The C key clears everything.", 20, height * 0.11);
     }
-    if (key == 'c' || key == 'C') {
-      electrons.remove(electrons.size() - electrons.size());
-      protons.remove(protons.size() - protons.size());
-      neutrons.remove(neutrons.size() - neutrons.size());
+    if (electrons.size() > 1 && protons.size() > 1 && neutrons.size() > 1) {
+      if (key == 'c' || key == 'C') {
+        electrons.remove(electrons.size());
+        protons.remove(protons.size());
+        neutrons.remove(neutrons.size());
+      }
     }
   }
 }
