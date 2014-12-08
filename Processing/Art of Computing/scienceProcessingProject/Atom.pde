@@ -10,11 +10,9 @@ class Atom {
     name = name_;
     symbol = symbol_;
   }
-  
-  
+ }
  
- 
- 
-  
+interface SubatomicParticle {
+  void draw();
 }
    

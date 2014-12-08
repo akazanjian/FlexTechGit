@@ -99,7 +99,7 @@ void draw() {
   for (Proton aProton: protons) {
     aProton.draw();
   }
-  for (Electron anElectron: electrons) {
+  for (SubatomicParticle anElectron: electrons) {
     anElectron.draw();
   }
   for (Neutron aNeutron: neutrons) {
@@ -125,17 +125,19 @@ void draw() {
   if (protons.size() < electrons.size()) {
     text("Charge: - " + chargeDown, w - 200, h * .11);
   }
-
   int atomicNumber = protons.size();
   Atom atom = atoms.get(atomicNumber);
   text("Element: " + atom.name, w - 200, h * .13);
   text("Symbol: " + atom.symbol, w- 200, h * .15);
-  if (keyPressed == true) {
-    if (electrons.size() > 1 && protons.size() > 1 && neutrons.size() > 1) {
+  boolean instructions = false;
+  int desiredNumberOfNeutrons = round(atom.amu) - protons.size();
+  if (keyPressed) {
+    if (electrons.size() > 0 && protons.size() > 0 && neutrons.size() > 0) {
       if (key == 'c' || key == 'C') {
-        electrons.remove(electrons.size());
-        protons.remove(protons.size());
-        neutrons.remove(neutrons.size());
+        //        int newNumberOfProtons = protons.size() - 1;
+        electrons.remove(electrons.size() - 1);
+        protons.remove(protons.size() - 1);
+        neutrons.remove(neutrons.size() - 1);
       }
     }
     if (key == 'i' || key == 'I') {
@@ -144,12 +146,18 @@ void draw() {
       text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
       text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
       text("The C key clears everything.", 20, height * 0.11);
+      instructions = true;
     }
   }
-  else {
+  instructions = false;
+  if (!instructions) {
     text("Press i for instructions", 20, height * 0.05);
   }
 }
+//
+//void setNumberOfParticles(ArrayList<SubatomicParticle> particles, int newNumberOfParticles) {
+//  
+//}
 
 void keyPressed() {
   float angle = random(0, 2 * PI);
@@ -177,15 +185,31 @@ void keyPressed() {
     if (protons.size() < 109) {
       if (keyCode == UP) {
         protons.add(new Proton(protonX, protonY, protons.size()));
+        neutralizeCharge();
       }
     }
     if (protons.size() > 0) {
       if (keyCode == DOWN) {
         protons.remove(protons.size() - 1);
+        neutralizeCharge();
       }
     }
   }
 }
+
+void stabilizeIsotope() {
+  while (neutrons.size() //unfinished code
+}
+
+void neutralizeCharge() {
+  while (electrons.size () < protons.size()) {
+    electrons.add(new Electron(electrons.size()+1));
+  }
+  while (electrons.size () > protons.size()) {
+    electrons.remove(electrons.size() - 1);
+  }
+}
+
 
 void createAtoms() {
   atoms = new ArrayList<Atom>();

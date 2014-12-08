@@ -1,4 +1,4 @@
-class Electron {
+class Electron implements SubatomicParticle {
   float x;
   float y;
   float rotationSpeed;
