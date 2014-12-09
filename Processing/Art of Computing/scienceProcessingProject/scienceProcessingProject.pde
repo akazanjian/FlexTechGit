@@ -1,4 +1,3 @@
-Atom atom;
 ArrayList<ElectronShell> shells;
 ArrayList<Proton> protons;
 ArrayList<Electron> electrons;

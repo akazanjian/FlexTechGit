@@ -69,6 +69,11 @@ int numberOfElectronsInShell(int shellLevel_) {
   return electronCount() - totalElectronsInFilledShells[shellLevel_ - 1];
 }
 
+void resetToHydrogen() {
+  protons = new ArrayList<Proton>();
+  protons.add(new Proton(0));
+}
+
 void draw() {
   float atomicMass = protons.size() + neutrons.size();
   float chargeUp = protons.size() - electrons.size();
@@ -78,9 +83,9 @@ void draw() {
   float diameter = (shells.size() + 2) * 100;
   if (frameCount == 1) {
     shells.add(new ElectronShell(diameter));
-    protons.add(new Proton(0, 0, 0));
+    protons.add(new Proton(0));
     electrons.add(new Electron(1));
-    neutrons.add(new Neutron(10, 10, 0));
+    //    neutrons.add(new Neutron(0));
     //    electronCount = 1;
   }
   if (electrons.size() == 0) {
@@ -125,19 +130,36 @@ void draw() {
   if (protons.size() < electrons.size()) {
     text("Charge: - " + chargeDown, w - 200, h * .11);
   }
-
   int atomicNumber = protons.size();
   Atom atom = atoms.get(atomicNumber);
   text("Element: " + atom.name, w - 200, h * .13);
   text("Symbol: " + atom.symbol, w- 200, h * .15);
+  boolean instructions = false;
+  if (keyPressed) {
+    if (key == 'i' || key == 'I') {
+      textSize(12);
+      text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
+      text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
+      text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
+      text("The C key resets the element to hydrogen.", 20, height * 0.11);
+      instructions = true;
+    }
+  }
+  else {
+    instructions = false;
+  }
+  if (!instructions) {
+    text("Press i for instructions", 20, height * 0.05);
+  }
 }
+//
+//void setNumberOfParticles(ArrayList<SubatomicParticle> particles, int newNumberOfParticles) {
+//  
+//}
+
+
 
 void keyPressed() {
-  float angle = random(0, 2 * PI);
-  float neutronX = neutronNuclearRadius * cos(angle);
-  float neutronY = neutronNuclearRadius * sin(angle);
-  float protonX = protonNuclearRadius * cos(angle);
-  float protonY = protonNuclearRadius * sin(angle);
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size()+1));
@@ -148,7 +170,7 @@ void keyPressed() {
       }
     }
     if (keyCode == SHIFT) {
-      neutrons.add(new Neutron(neutronX, neutronY, neutrons.size()));
+      neutrons.add(new Neutron(neutrons.size()));
     }
     if (neutrons.size() > 0) {
       if (keyCode == CONTROL) {
@@ -157,30 +179,47 @@ void keyPressed() {
     }
     if (protons.size() < 109) {
       if (keyCode == UP) {
-        protons.add(new Proton(protonX, protonY, protons.size()));
+        protons.add(new Proton(protons.size()));
+        neutralizeCharge();
+        stabilizeIsotope();
       }
     }
     if (protons.size() > 0) {
       if (keyCode == DOWN) {
         protons.remove(protons.size() - 1);
+        neutralizeCharge();
+        stabilizeIsotope();
       }
     }
   }
-  if (keyPressed == true) {
-    if (key == 'i' || key == 'I') {
-      textSize(12);
-      text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
-      text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
-      text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
-      text("The C key clears everything.", 20, height * 0.11);
-    }
-    if (key == 'c' || key == 'C') {
-      electrons.remove(electrons.size() - electrons.size());
-      protons.remove(protons.size() - protons.size());
-      neutrons.remove(neutrons.size() - neutrons.size());
-    }
+  if (key == 'c' || key == 'C') {
+    protons = new ArrayList<Proton>();
+    protons.add(new Proton(protons.size()));
+    neutralizeCharge();
+    stabilizeIsotope();
   }
 }
+
+void stabilizeIsotope() {
+  Atom stableIsotope = atoms.get(protons.size());
+  int desiredNumberOfNeutrons = round(stableIsotope.amu) - protons.size();
+  while (neutrons.size () < desiredNumberOfNeutrons) {
+    neutrons.add(new Neutron(neutrons.size()));
+  }
+  while (neutrons.size () > desiredNumberOfNeutrons) {
+    neutrons.remove(neutrons.size() - 1);
+  }
+}
+
+void neutralizeCharge() {
+  while (electrons.size () < protons.size()) {
+    electrons.add(new Electron(electrons.size()+1));
+  }
+  while (electrons.size () > protons.size()) {
+    electrons.remove(electrons.size() - 1);
+  }
+}
+
 
 void createAtoms() {
   atoms = new ArrayList<Atom>();
@@ -300,21 +339,14 @@ class Atom {
   float amu;
   String name;
   String symbol;
-  
+
   Atom(int p, float mass, String name_, String symbol_) {
     protons = p;
     amu = mass;
     name = name_;
     symbol = symbol_;
   }
-  
-  
- 
- 
- 
-  
 }
-   
 class Electron {
   float x;
   float y;
@@ -351,9 +383,10 @@ class Neutron {
   float x, y;
   int neutronNumber;
 
-  Neutron(float x_, float y_, int neutronNumber_) {
-    x = x_;
-    y = y_;
+  Neutron(int neutronNumber_) {
+    float angle = random(0, 2 * PI);
+    x = neutronNuclearRadius * cos(angle);
+    y = neutronNuclearRadius * sin(angle);
     neutronNumber = neutronNumber_;
     diameter = 50;
   }
@@ -372,9 +405,10 @@ class Proton {
   float x, y;
   int protonNumber;
 
-  Proton(float x_, float y_, int protonNumber_) {
-    x = x_;
-    y = y_;
+  Proton(int protonNumber_) {
+    float angle = random(0, 2 * PI);
+    x = protonNuclearRadius * cos(angle);
+    y = protonNuclearRadius * sin(angle);
     protonNumber = protonNumber_;
     diameter = 50;
   }
