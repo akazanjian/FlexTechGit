@@ -3,9 +3,10 @@ class Neutron {
   float x, y;
   int neutronNumber;
 
-  Neutron(float x_, float y_, int neutronNumber_) {
-    x = x_;
-    y = y_;
+  Neutron(int neutronNumber_) {
+    float angle = random(0, 2 * PI);
+    x = neutronNuclearRadius * cos(angle);
+    y = neutronNuclearRadius * sin(angle);
     neutronNumber = neutronNumber_;
     diameter = 50;
   }

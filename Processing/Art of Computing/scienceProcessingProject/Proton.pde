@@ -3,9 +3,10 @@ class Proton {
   float x, y;
   int protonNumber;
 
-  Proton(float x_, float y_, int protonNumber_) {
-    x = x_;
-    y = y_;
+  Proton(int protonNumber_) {
+    float angle = random(0, 2 * PI);
+    x = protonNuclearRadius * cos(angle);
+    y = protonNuclearRadius * sin(angle);
     protonNumber = protonNumber_;
     diameter = 50;
   }

@@ -69,6 +69,11 @@ int numberOfElectronsInShell(int shellLevel_) {
   return electronCount() - totalElectronsInFilledShells[shellLevel_ - 1];
 }
 
+void resetToHydrogen() {
+  protons = new ArrayList<Proton>();
+  protons.add(new Proton(0));
+}
+
 void draw() {
   float atomicMass = protons.size() + neutrons.size();
   float chargeUp = protons.size() - electrons.size();
@@ -78,9 +83,9 @@ void draw() {
   float diameter = (shells.size() + 2) * 100;
   if (frameCount == 1) {
     shells.add(new ElectronShell(diameter));
-    protons.add(new Proton(0, 0, 0));
+    protons.add(new Proton(0));
     electrons.add(new Electron(1));
-    neutrons.add(new Neutron(10, 10, 0));
+    //    neutrons.add(new Neutron(0));
     //    electronCount = 1;
   }
   if (electrons.size() == 0) {
@@ -99,7 +104,7 @@ void draw() {
   for (Proton aProton: protons) {
     aProton.draw();
   }
-  for (SubatomicParticle anElectron: electrons) {
+  for (Electron anElectron: electrons) {
     anElectron.draw();
   }
   for (Neutron aNeutron: neutrons) {
@@ -130,26 +135,19 @@ void draw() {
   text("Element: " + atom.name, w - 200, h * .13);
   text("Symbol: " + atom.symbol, w- 200, h * .15);
   boolean instructions = false;
-  int desiredNumberOfNeutrons = round(atom.amu) - protons.size();
   if (keyPressed) {
-    if (electrons.size() > 0 && protons.size() > 0 && neutrons.size() > 0) {
-      if (key == 'c' || key == 'C') {
-        //        int newNumberOfProtons = protons.size() - 1;
-        electrons.remove(electrons.size() - 1);
-        protons.remove(protons.size() - 1);
-        neutrons.remove(neutrons.size() - 1);
-      }
-    }
     if (key == 'i' || key == 'I') {
       textSize(12);
       text("The Shift and Control keys change the number of neutrons.", 20, height * 0.05);
       text("The Left and Right arrow keys change the number of electrons.", 20, height * 0.07);
       text("The Up and Down arrow keys change the number of protons.", 20, height * 0.09);
-      text("The C key clears everything.", 20, height * 0.11);
+      text("The C key resets the element to hydrogen.", 20, height * 0.11);
       instructions = true;
     }
   }
-  instructions = false;
+  else {
+    instructions = false;
+  }
   if (!instructions) {
     text("Press i for instructions", 20, height * 0.05);
   }
@@ -159,12 +157,9 @@ void draw() {
 //  
 //}
 
+
+
 void keyPressed() {
-  float angle = random(0, 2 * PI);
-  float neutronX = neutronNuclearRadius * cos(angle);
-  float neutronY = neutronNuclearRadius * sin(angle);
-  float protonX = protonNuclearRadius * cos(angle);
-  float protonY = protonNuclearRadius * sin(angle);
   if (key == CODED) {
     if (keyCode == RIGHT) {
       electrons.add(new Electron(electrons.size()+1));
@@ -175,7 +170,7 @@ void keyPressed() {
       }
     }
     if (keyCode == SHIFT) {
-      neutrons.add(new Neutron(neutronX, neutronY, neutrons.size()));
+      neutrons.add(new Neutron(neutrons.size()));
     }
     if (neutrons.size() > 0) {
       if (keyCode == CONTROL) {
@@ -184,21 +179,36 @@ void keyPressed() {
     }
     if (protons.size() < 109) {
       if (keyCode == UP) {
-        protons.add(new Proton(protonX, protonY, protons.size()));
+        protons.add(new Proton(protons.size()));
         neutralizeCharge();
+        stabilizeIsotope();
       }
     }
     if (protons.size() > 0) {
       if (keyCode == DOWN) {
         protons.remove(protons.size() - 1);
         neutralizeCharge();
+        stabilizeIsotope();
       }
     }
+  }
+  if (key == 'c' || key == 'C') {
+    protons = new ArrayList<Proton>();
+    protons.add(new Proton(protons.size()));
+    neutralizeCharge();
+    stabilizeIsotope();
   }
 }
 
 void stabilizeIsotope() {
-  while (neutrons.size() //unfinished code
+  Atom stableIsotope = atoms.get(protons.size());
+  int desiredNumberOfNeutrons = round(stableIsotope.amu) - protons.size();
+  while (neutrons.size () < desiredNumberOfNeutrons) {
+    neutrons.add(new Neutron(neutrons.size()));
+  }
+  while (neutrons.size () > desiredNumberOfNeutrons) {
+    neutrons.remove(neutrons.size() - 1);
+  }
 }
 
 void neutralizeCharge() {
