@@ -70,7 +70,9 @@ int numberOfElectronsInShell(int shellLevel_) {
 
 void resetToHydrogen() {
   protons = new ArrayList<Proton>();
-  protons.add(new Proton(0));
+  protons.add(new Proton(0, true));
+  neutralizeCharge();
+  stabilizeIsotope();
 }
 
 void draw() {
@@ -81,9 +83,10 @@ void draw() {
   int numberOfElectronShells = shellLevel(electronCount());
   float diameter = (shells.size() + 2) * 100;
   if (frameCount == 1) {
-    shells.add(new ElectronShell(diameter));
-    protons.add(new Proton(0));
-    electrons.add(new Electron(1));
+    resetToHydrogen();
+    //    shells.add(new ElectronShell(diameter));
+    //    protons.add(new Proton(0, true));
+    //    electrons.add(new Electron(1));
     //    neutrons.add(new Neutron(0));
     //    electronCount = 1;
   }
@@ -178,7 +181,7 @@ void keyPressed() {
     }
     if (protons.size() < 109) {
       if (keyCode == UP) {
-        protons.add(new Proton(protons.size()));
+        protons.add(new Proton(protons.size(), false));
         neutralizeCharge();
         stabilizeIsotope();
       }
@@ -192,10 +195,7 @@ void keyPressed() {
     }
   }
   if (key == 'c' || key == 'C') {
-    protons = new ArrayList<Proton>();
-    protons.add(new Proton(protons.size()));
-    neutralizeCharge();
-    stabilizeIsotope();
+    resetToHydrogen();
   }
 }
 
