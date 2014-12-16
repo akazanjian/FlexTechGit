@@ -1,19 +1,39 @@
-PGraphics pg; //<>//
+PGraphics mask; //<>//
+int WHITE = color(255);
+int BLACK = color(0);
 
 void setup() {
   size(644, 500);
-  pg  = createGraphics(width, height);
-  pg.beginDraw();
-  pg.background(0);
-  pg.noStroke();
-  pg.fill(255);
-  pg.ellipse(width/2, height/2, 50, 50);
-  pg.ellipse(100, 100, 50, 50);
-  pg.ellipse(600, 400, 50, 50);
-  pg.ellipse(200, 350, 50, 50);
-  pg.endDraw();
+  mask  = createGraphics(width, height);
+  mask.beginDraw();
+  mask.background(0);
+  mask.noStroke();
+  mask.fill(255);
+  mask.ellipse(width/2, height/2, 50, 50);
+  mask.ellipse(100, 100, 50, 50);
+  mask.ellipse(600, 400, 50, 50);
+  mask.ellipse(200, 350, 50, 50);
+  mask.endDraw();
+  mask.loadPixels();
 }
 
 void draw() {
-  image(pg, 0, 0);
+  background(102, 178, 255);
+  fill(255, 0, 0);
+  noStroke();
+  ellipse(mouseX, mouseY, 50, 50);
+  maskPixels();
+  //  image(mask, 0, 0);
+}
+
+void maskPixels() {
+  loadPixels();
+  int[] pxls = mask.pixels;
+  for (int i = 0; i < pxls.length; ++i) {
+    int maskPixel= pxls[i];
+    if (maskPixel != WHITE) {
+      pixels[i] = BLACK;
+    }
+  }
+  updatePixels();
 }
